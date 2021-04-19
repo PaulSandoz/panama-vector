@@ -4,6 +4,17 @@
                                            BiFunction<Integer,Integer,int[]> fs) {
 [[KERNEL]]
         assertRearrangeArraysEquals(r, a, order, SPECIES.length());
+
+        a = fa.apply(SPECIES.length());
+        order = fs.apply(a.length, SPECIES.length() * 2);
+        for (int ic = 0; ic < INVOC_COUNT; ic++) {
+            for (int i = 0; i < a.length; i += SPECIES.length()) {
+                $abstractvectortype$ av = $abstractvectortype$.fromArray(SPECIES, a, i);
+                av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), true).intoArray(r, i);
+            }
+        }
+
+        assertRearrangeArraysEquals(r, a, order, SPECIES.length());
     }
 
     @Test(dataProvider = "$type$UnaryOpShuffleMaskProvider")
@@ -19,6 +30,16 @@
         for (int i = 0; i < a.length; i += SPECIES.length()) {
             $abstractvectortype$ av = $abstractvectortype$.fromArray(SPECIES, a, i);
             av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), vmask).intoArray(r, i);
+        }
+
+        assertRearrangeArraysEquals(r, a, order, mask, SPECIES.length());
+
+
+        a = fa.apply(SPECIES.length());
+        order = fs.apply(a.length, SPECIES.length() * 2);
+        for (int i = 0; i < a.length; i += SPECIES.length()) {
+            $abstractvectortype$ av = $abstractvectortype$.fromArray(SPECIES, a, i);
+            av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), vmask, true).intoArray(r, i);
         }
 
         assertRearrangeArraysEquals(r, a, order, mask, SPECIES.length());

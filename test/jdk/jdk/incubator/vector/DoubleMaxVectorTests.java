@@ -242,12 +242,14 @@ public class DoubleMaxVectorTests extends AbstractVectorTest {
         try {
             for (; i < a.length; i += vector_len) {
                 for (j = 0; j < vector_len; j++) {
-                    Assert.assertEquals(r[i+j], a[i+order[i+j]]);
+                    int o = wrapToRange(order[i + j], vector_len);
+                    Assert.assertEquals(r[i + j], a[i + o]);
                 }
             }
         } catch (AssertionError e) {
             int idx = i + j;
-            Assert.assertEquals(r[i+j], a[i+order[i+j]], "at index #" + idx + ", input = " + a[i+order[i+j]]);
+            int o = wrapToRange(order[idx], vector_len);
+            Assert.assertEquals(r[idx], a[i + o], "at index #" + idx + ", input = " + a[i + o]);
         }
     }
 
@@ -270,18 +272,38 @@ public class DoubleMaxVectorTests extends AbstractVectorTest {
         try {
             for (; i < a.length; i += vector_len) {
                 for (j = 0; j < vector_len; j++) {
-                    if (mask[j % SPECIES.length()])
-                         Assert.assertEquals(r[i+j], a[i+order[i+j]]);
-                    else
-                         Assert.assertEquals(r[i+j], (double)0);
+                    if (mask[j % SPECIES.length()]) {
+                         int o = wrapToRange(order[i + j], vector_len);
+                         Assert.assertEquals(r[i + j], a[i + o]);
+                    } else {
+                         Assert.assertEquals(r[i + j], (double) 0);
+                    }
                 }
             }
         } catch (AssertionError e) {
             int idx = i + j;
-            if (mask[j % SPECIES.length()])
-                Assert.assertEquals(r[i+j], a[i+order[i+j]], "at index #" + idx + ", input = " + a[i+order[i+j]] + ", mask = " + mask[j % SPECIES.length()]);
-            else
-                Assert.assertEquals(r[i+j], (double)0, "at index #" + idx + ", input = " + a[i+order[i+j]] + ", mask = " + mask[j % SPECIES.length()]);
+            int o = wrapToRange(order[i + j], vector_len);
+            if (mask[j % SPECIES.length()]) {
+                Assert.assertEquals(r[idx], a[i + o], "at index #" + idx + ", input = " + a[i + o] + ", mask = " + mask[j % SPECIES.length()]);
+            } else {
+                Assert.assertEquals(r[idx], (double) 0, "at index #" + idx + ", input = " + a[i + o] + ", mask = " + mask[j % SPECIES.length()]);
+            }
+        }
+    }
+
+    static int wrapToRange(int index, int size) {
+        if ((size & (size - 1)) == 0) {
+            // Size is zero or a power of two, so we got this.
+            return index & (size - 1);
+        } else {
+            return wrapToRangeNPOT(index, size);
+        }
+    }
+    static int wrapToRangeNPOT(int index, int size) {
+        if (index >= 0) {
+            return (index % size);
+        } else {
+            return Math.floorMod(index, Math.abs(size));
         }
     }
 
@@ -3132,6 +3154,17 @@ public class DoubleMaxVectorTests extends AbstractVectorTest {
         }
 
         assertRearrangeArraysEquals(r, a, order, SPECIES.length());
+
+        a = fa.apply(SPECIES.length());
+        order = fs.apply(a.length, SPECIES.length() * 2);
+        for (int ic = 0; ic < INVOC_COUNT; ic++) {
+            for (int i = 0; i < a.length; i += SPECIES.length()) {
+                DoubleVector av = DoubleVector.fromArray(SPECIES, a, i);
+                av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), true).intoArray(r, i);
+            }
+        }
+
+        assertRearrangeArraysEquals(r, a, order, SPECIES.length());
     }
 
     @Test(dataProvider = "doubleUnaryOpShuffleMaskProvider")
@@ -3147,6 +3180,16 @@ public class DoubleMaxVectorTests extends AbstractVectorTest {
         for (int i = 0; i < a.length; i += SPECIES.length()) {
             DoubleVector av = DoubleVector.fromArray(SPECIES, a, i);
             av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), vmask).intoArray(r, i);
+        }
+
+        assertRearrangeArraysEquals(r, a, order, mask, SPECIES.length());
+
+
+        a = fa.apply(SPECIES.length());
+        order = fs.apply(a.length, SPECIES.length() * 2);
+        for (int i = 0; i < a.length; i += SPECIES.length()) {
+            DoubleVector av = DoubleVector.fromArray(SPECIES, a, i);
+            av.rearrange(VectorShuffle.fromArray(SPECIES, order, i), vmask, true).intoArray(r, i);
         }
 
         assertRearrangeArraysEquals(r, a, order, mask, SPECIES.length());
