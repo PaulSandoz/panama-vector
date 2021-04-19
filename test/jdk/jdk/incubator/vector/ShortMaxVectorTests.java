@@ -282,7 +282,7 @@ public class ShortMaxVectorTests extends AbstractVectorTest {
             }
         } catch (AssertionError e) {
             int idx = i + j;
-            int o = wrapToRange(order[i + j], vector_len);
+            int o = wrapToRange(order[idx], vector_len);
             if (mask[j % SPECIES.length()]) {
                 Assert.assertEquals(r[idx], a[i + o], "at index #" + idx + ", input = " + a[i + o] + ", mask = " + mask[j % SPECIES.length()]);
             } else {
