@@ -427,20 +427,23 @@ final class ShortMaxVector extends ShortVector {
 
     @Override
     @ForceInline
-    public ShortMaxVector rearrange(VectorShuffle<Short> s) {
+    public ShortMaxVector rearrange(VectorShuffle<Short> s, boolean wrap) {
         return (ShortMaxVector)
             super.rearrangeTemplate(ShortMaxShuffle.class,
-                                    (ShortMaxShuffle) s);  // specialize
+                                    (ShortMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public ShortMaxVector rearrange(VectorShuffle<Short> shuffle,
-                                  VectorMask<Short> m) {
+    public ShortMaxVector rearrange(VectorShuffle<Short> s,
+                                  VectorMask<Short> m,
+                                  boolean wrap) {
         return (ShortMaxVector)
             super.rearrangeTemplate(ShortMaxShuffle.class,
-                                    (ShortMaxShuffle) shuffle,
-                                    (ShortMaxMask) m);  // specialize
+                                    (ShortMaxShuffle) s,
+                                    (ShortMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override

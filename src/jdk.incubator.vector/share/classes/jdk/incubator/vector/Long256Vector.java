@@ -417,20 +417,23 @@ final class Long256Vector extends LongVector {
 
     @Override
     @ForceInline
-    public Long256Vector rearrange(VectorShuffle<Long> s) {
+    public Long256Vector rearrange(VectorShuffle<Long> s, boolean wrap) {
         return (Long256Vector)
             super.rearrangeTemplate(Long256Shuffle.class,
-                                    (Long256Shuffle) s);  // specialize
+                                    (Long256Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Long256Vector rearrange(VectorShuffle<Long> shuffle,
-                                  VectorMask<Long> m) {
+    public Long256Vector rearrange(VectorShuffle<Long> s,
+                                  VectorMask<Long> m,
+                                  boolean wrap) {
         return (Long256Vector)
             super.rearrangeTemplate(Long256Shuffle.class,
-                                    (Long256Shuffle) shuffle,
-                                    (Long256Mask) m);  // specialize
+                                    (Long256Shuffle) s,
+                                    (Long256Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

@@ -427,20 +427,23 @@ final class Byte64Vector extends ByteVector {
 
     @Override
     @ForceInline
-    public Byte64Vector rearrange(VectorShuffle<Byte> s) {
+    public Byte64Vector rearrange(VectorShuffle<Byte> s, boolean wrap) {
         return (Byte64Vector)
             super.rearrangeTemplate(Byte64Shuffle.class,
-                                    (Byte64Shuffle) s);  // specialize
+                                    (Byte64Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Byte64Vector rearrange(VectorShuffle<Byte> shuffle,
-                                  VectorMask<Byte> m) {
+    public Byte64Vector rearrange(VectorShuffle<Byte> s,
+                                  VectorMask<Byte> m,
+                                  boolean wrap) {
         return (Byte64Vector)
             super.rearrangeTemplate(Byte64Shuffle.class,
-                                    (Byte64Shuffle) shuffle,
-                                    (Byte64Mask) m);  // specialize
+                                    (Byte64Shuffle) s,
+                                    (Byte64Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

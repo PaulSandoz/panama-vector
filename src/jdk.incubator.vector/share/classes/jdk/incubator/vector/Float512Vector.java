@@ -421,20 +421,23 @@ final class Float512Vector extends FloatVector {
 
     @Override
     @ForceInline
-    public Float512Vector rearrange(VectorShuffle<Float> s) {
+    public Float512Vector rearrange(VectorShuffle<Float> s, boolean wrap) {
         return (Float512Vector)
             super.rearrangeTemplate(Float512Shuffle.class,
-                                    (Float512Shuffle) s);  // specialize
+                                    (Float512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Float512Vector rearrange(VectorShuffle<Float> shuffle,
-                                  VectorMask<Float> m) {
+    public Float512Vector rearrange(VectorShuffle<Float> s,
+                                  VectorMask<Float> m,
+                                  boolean wrap) {
         return (Float512Vector)
             super.rearrangeTemplate(Float512Shuffle.class,
-                                    (Float512Shuffle) shuffle,
-                                    (Float512Mask) m);  // specialize
+                                    (Float512Shuffle) s,
+                                    (Float512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

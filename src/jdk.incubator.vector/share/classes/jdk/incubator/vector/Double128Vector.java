@@ -421,20 +421,23 @@ final class Double128Vector extends DoubleVector {
 
     @Override
     @ForceInline
-    public Double128Vector rearrange(VectorShuffle<Double> s) {
+    public Double128Vector rearrange(VectorShuffle<Double> s, boolean wrap) {
         return (Double128Vector)
             super.rearrangeTemplate(Double128Shuffle.class,
-                                    (Double128Shuffle) s);  // specialize
+                                    (Double128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Double128Vector rearrange(VectorShuffle<Double> shuffle,
-                                  VectorMask<Double> m) {
+    public Double128Vector rearrange(VectorShuffle<Double> s,
+                                  VectorMask<Double> m,
+                                  boolean wrap) {
         return (Double128Vector)
             super.rearrangeTemplate(Double128Shuffle.class,
-                                    (Double128Shuffle) shuffle,
-                                    (Double128Mask) m);  // specialize
+                                    (Double128Shuffle) s,
+                                    (Double128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

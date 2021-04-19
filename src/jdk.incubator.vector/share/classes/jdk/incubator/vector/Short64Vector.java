@@ -427,20 +427,23 @@ final class Short64Vector extends ShortVector {
 
     @Override
     @ForceInline
-    public Short64Vector rearrange(VectorShuffle<Short> s) {
+    public Short64Vector rearrange(VectorShuffle<Short> s, boolean wrap) {
         return (Short64Vector)
             super.rearrangeTemplate(Short64Shuffle.class,
-                                    (Short64Shuffle) s);  // specialize
+                                    (Short64Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Short64Vector rearrange(VectorShuffle<Short> shuffle,
-                                  VectorMask<Short> m) {
+    public Short64Vector rearrange(VectorShuffle<Short> s,
+                                  VectorMask<Short> m,
+                                  boolean wrap) {
         return (Short64Vector)
             super.rearrangeTemplate(Short64Shuffle.class,
-                                    (Short64Shuffle) shuffle,
-                                    (Short64Mask) m);  // specialize
+                                    (Short64Shuffle) s,
+                                    (Short64Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

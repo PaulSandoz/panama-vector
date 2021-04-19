@@ -421,20 +421,23 @@ final class Float128Vector extends FloatVector {
 
     @Override
     @ForceInline
-    public Float128Vector rearrange(VectorShuffle<Float> s) {
+    public Float128Vector rearrange(VectorShuffle<Float> s, boolean wrap) {
         return (Float128Vector)
             super.rearrangeTemplate(Float128Shuffle.class,
-                                    (Float128Shuffle) s);  // specialize
+                                    (Float128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Float128Vector rearrange(VectorShuffle<Float> shuffle,
-                                  VectorMask<Float> m) {
+    public Float128Vector rearrange(VectorShuffle<Float> s,
+                                  VectorMask<Float> m,
+                                  boolean wrap) {
         return (Float128Vector)
             super.rearrangeTemplate(Float128Shuffle.class,
-                                    (Float128Shuffle) shuffle,
-                                    (Float128Mask) m);  // specialize
+                                    (Float128Shuffle) s,
+                                    (Float128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

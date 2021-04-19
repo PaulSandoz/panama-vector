@@ -427,20 +427,23 @@ final class Int512Vector extends IntVector {
 
     @Override
     @ForceInline
-    public Int512Vector rearrange(VectorShuffle<Integer> s) {
+    public Int512Vector rearrange(VectorShuffle<Integer> s, boolean wrap) {
         return (Int512Vector)
             super.rearrangeTemplate(Int512Shuffle.class,
-                                    (Int512Shuffle) s);  // specialize
+                                    (Int512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Int512Vector rearrange(VectorShuffle<Integer> shuffle,
-                                  VectorMask<Integer> m) {
+    public Int512Vector rearrange(VectorShuffle<Integer> s,
+                                  VectorMask<Integer> m,
+                                  boolean wrap) {
         return (Int512Vector)
             super.rearrangeTemplate(Int512Shuffle.class,
-                                    (Int512Shuffle) shuffle,
-                                    (Int512Mask) m);  // specialize
+                                    (Int512Shuffle) s,
+                                    (Int512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

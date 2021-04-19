@@ -433,20 +433,23 @@ final class $vectortype$ extends $abstractvectortype$ {
 
     @Override
     @ForceInline
-    public $vectortype$ rearrange(VectorShuffle<$Boxtype$> s) {
+    public $vectortype$ rearrange(VectorShuffle<$Boxtype$> s, boolean wrap) {
         return ($vectortype$)
             super.rearrangeTemplate($shuffletype$.class,
-                                    ($shuffletype$) s);  // specialize
+                                    ($shuffletype$) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public $vectortype$ rearrange(VectorShuffle<$Boxtype$> shuffle,
-                                  VectorMask<$Boxtype$> m) {
+    public $vectortype$ rearrange(VectorShuffle<$Boxtype$> s,
+                                  VectorMask<$Boxtype$> m,
+                                  boolean wrap) {
         return ($vectortype$)
             super.rearrangeTemplate($shuffletype$.class,
-                                    ($shuffletype$) shuffle,
-                                    ($masktype$) m);  // specialize
+                                    ($shuffletype$) s,
+                                    ($masktype$) m,
+                                    wrap);  // specialize
     }
 
     @Override

@@ -427,20 +427,23 @@ final class Int256Vector extends IntVector {
 
     @Override
     @ForceInline
-    public Int256Vector rearrange(VectorShuffle<Integer> s) {
+    public Int256Vector rearrange(VectorShuffle<Integer> s, boolean wrap) {
         return (Int256Vector)
             super.rearrangeTemplate(Int256Shuffle.class,
-                                    (Int256Shuffle) s);  // specialize
+                                    (Int256Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Int256Vector rearrange(VectorShuffle<Integer> shuffle,
-                                  VectorMask<Integer> m) {
+    public Int256Vector rearrange(VectorShuffle<Integer> s,
+                                  VectorMask<Integer> m,
+                                  boolean wrap) {
         return (Int256Vector)
             super.rearrangeTemplate(Int256Shuffle.class,
-                                    (Int256Shuffle) shuffle,
-                                    (Int256Mask) m);  // specialize
+                                    (Int256Shuffle) s,
+                                    (Int256Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

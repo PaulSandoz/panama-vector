@@ -427,20 +427,23 @@ final class IntMaxVector extends IntVector {
 
     @Override
     @ForceInline
-    public IntMaxVector rearrange(VectorShuffle<Integer> s) {
+    public IntMaxVector rearrange(VectorShuffle<Integer> s, boolean wrap) {
         return (IntMaxVector)
             super.rearrangeTemplate(IntMaxShuffle.class,
-                                    (IntMaxShuffle) s);  // specialize
+                                    (IntMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public IntMaxVector rearrange(VectorShuffle<Integer> shuffle,
-                                  VectorMask<Integer> m) {
+    public IntMaxVector rearrange(VectorShuffle<Integer> s,
+                                  VectorMask<Integer> m,
+                                  boolean wrap) {
         return (IntMaxVector)
             super.rearrangeTemplate(IntMaxShuffle.class,
-                                    (IntMaxShuffle) shuffle,
-                                    (IntMaxMask) m);  // specialize
+                                    (IntMaxShuffle) s,
+                                    (IntMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override

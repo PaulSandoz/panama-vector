@@ -421,20 +421,23 @@ final class Float256Vector extends FloatVector {
 
     @Override
     @ForceInline
-    public Float256Vector rearrange(VectorShuffle<Float> s) {
+    public Float256Vector rearrange(VectorShuffle<Float> s, boolean wrap) {
         return (Float256Vector)
             super.rearrangeTemplate(Float256Shuffle.class,
-                                    (Float256Shuffle) s);  // specialize
+                                    (Float256Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Float256Vector rearrange(VectorShuffle<Float> shuffle,
-                                  VectorMask<Float> m) {
+    public Float256Vector rearrange(VectorShuffle<Float> s,
+                                  VectorMask<Float> m,
+                                  boolean wrap) {
         return (Float256Vector)
             super.rearrangeTemplate(Float256Shuffle.class,
-                                    (Float256Shuffle) shuffle,
-                                    (Float256Mask) m);  // specialize
+                                    (Float256Shuffle) s,
+                                    (Float256Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

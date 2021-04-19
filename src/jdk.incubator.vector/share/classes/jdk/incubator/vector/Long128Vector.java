@@ -417,20 +417,23 @@ final class Long128Vector extends LongVector {
 
     @Override
     @ForceInline
-    public Long128Vector rearrange(VectorShuffle<Long> s) {
+    public Long128Vector rearrange(VectorShuffle<Long> s, boolean wrap) {
         return (Long128Vector)
             super.rearrangeTemplate(Long128Shuffle.class,
-                                    (Long128Shuffle) s);  // specialize
+                                    (Long128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Long128Vector rearrange(VectorShuffle<Long> shuffle,
-                                  VectorMask<Long> m) {
+    public Long128Vector rearrange(VectorShuffle<Long> s,
+                                  VectorMask<Long> m,
+                                  boolean wrap) {
         return (Long128Vector)
             super.rearrangeTemplate(Long128Shuffle.class,
-                                    (Long128Shuffle) shuffle,
-                                    (Long128Mask) m);  // specialize
+                                    (Long128Shuffle) s,
+                                    (Long128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

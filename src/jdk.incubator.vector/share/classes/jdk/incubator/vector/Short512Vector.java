@@ -427,20 +427,23 @@ final class Short512Vector extends ShortVector {
 
     @Override
     @ForceInline
-    public Short512Vector rearrange(VectorShuffle<Short> s) {
+    public Short512Vector rearrange(VectorShuffle<Short> s, boolean wrap) {
         return (Short512Vector)
             super.rearrangeTemplate(Short512Shuffle.class,
-                                    (Short512Shuffle) s);  // specialize
+                                    (Short512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Short512Vector rearrange(VectorShuffle<Short> shuffle,
-                                  VectorMask<Short> m) {
+    public Short512Vector rearrange(VectorShuffle<Short> s,
+                                  VectorMask<Short> m,
+                                  boolean wrap) {
         return (Short512Vector)
             super.rearrangeTemplate(Short512Shuffle.class,
-                                    (Short512Shuffle) shuffle,
-                                    (Short512Mask) m);  // specialize
+                                    (Short512Shuffle) s,
+                                    (Short512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

@@ -427,20 +427,23 @@ final class Short128Vector extends ShortVector {
 
     @Override
     @ForceInline
-    public Short128Vector rearrange(VectorShuffle<Short> s) {
+    public Short128Vector rearrange(VectorShuffle<Short> s, boolean wrap) {
         return (Short128Vector)
             super.rearrangeTemplate(Short128Shuffle.class,
-                                    (Short128Shuffle) s);  // specialize
+                                    (Short128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Short128Vector rearrange(VectorShuffle<Short> shuffle,
-                                  VectorMask<Short> m) {
+    public Short128Vector rearrange(VectorShuffle<Short> s,
+                                  VectorMask<Short> m,
+                                  boolean wrap) {
         return (Short128Vector)
             super.rearrangeTemplate(Short128Shuffle.class,
-                                    (Short128Shuffle) shuffle,
-                                    (Short128Mask) m);  // specialize
+                                    (Short128Shuffle) s,
+                                    (Short128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

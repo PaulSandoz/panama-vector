@@ -2079,22 +2079,45 @@ public abstract class ByteVector extends AbstractVector<Byte> {
      * {@inheritDoc} <!--workaround-->
      */
     @Override
+    @ForceInline
+    public final
+    ByteVector rearrange(VectorShuffle<Byte> s) {
+        return rearrange(s, false);
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
     public abstract
-    ByteVector rearrange(VectorShuffle<Byte> m);
+    ByteVector rearrange(VectorShuffle<Byte> s, boolean wrap);
 
     /*package-private*/
     @ForceInline
     final
     <S extends VectorShuffle<Byte>>
-    ByteVector rearrangeTemplate(Class<S> shuffletype, S shuffle) {
-        shuffle.checkIndexes();
+    ByteVector rearrangeTemplate(Class<S> shuffletype, S shuffle, boolean wrap) {
+        if (!wrap) {
+            shuffle.checkIndexes();
+        }
         return VectorSupport.rearrangeOp(
             getClass(), shuffletype, byte.class, length(),
             this, shuffle,
             (v1, s_) -> v1.uOp((i, a) -> {
                 int ei = s_.laneSource(i);
-                return v1.lane(ei);
+                return v1.lane(s_.wrapIndex(ei));
             }));
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
+    @ForceInline
+    public final
+    ByteVector rearrange(VectorShuffle<Byte> s,
+                                   VectorMask<Byte> m) {
+        return rearrange(s, m, false);
     }
 
     /**
@@ -2103,7 +2126,8 @@ public abstract class ByteVector extends AbstractVector<Byte> {
     @Override
     public abstract
     ByteVector rearrange(VectorShuffle<Byte> s,
-                                   VectorMask<Byte> m);
+                                   VectorMask<Byte> m,
+                                   boolean wrap);
 
     /*package-private*/
     @ForceInline
@@ -2111,19 +2135,22 @@ public abstract class ByteVector extends AbstractVector<Byte> {
     <S extends VectorShuffle<Byte>>
     ByteVector rearrangeTemplate(Class<S> shuffletype,
                                            S shuffle,
-                                           VectorMask<Byte> m) {
+                                           VectorMask<Byte> m,
+                                           boolean wrap) {
         ByteVector unmasked =
             VectorSupport.rearrangeOp(
                 getClass(), shuffletype, byte.class, length(),
                 this, shuffle,
                 (v1, s_) -> v1.uOp((i, a) -> {
                     int ei = s_.laneSource(i);
-                    return ei < 0 ? 0 : v1.lane(ei);
+                    return v1.lane(s_.wrapIndex(ei));
                 }));
-        VectorMask<Byte> valid = shuffle.laneIsValid();
-        if (m.andNot(valid).anyTrue()) {
-            shuffle.checkIndexes();
-            throw new AssertionError();
+        if (!wrap) {
+            VectorMask<Byte> valid = shuffle.laneIsValid();
+            if (m.andNot(valid).anyTrue()) {
+                shuffle.checkIndexes();
+                throw new AssertionError();
+            }
         }
         return broadcast((byte)0).blend(unmasked, m);
     }

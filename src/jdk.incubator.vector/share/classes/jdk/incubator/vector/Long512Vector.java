@@ -417,20 +417,23 @@ final class Long512Vector extends LongVector {
 
     @Override
     @ForceInline
-    public Long512Vector rearrange(VectorShuffle<Long> s) {
+    public Long512Vector rearrange(VectorShuffle<Long> s, boolean wrap) {
         return (Long512Vector)
             super.rearrangeTemplate(Long512Shuffle.class,
-                                    (Long512Shuffle) s);  // specialize
+                                    (Long512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Long512Vector rearrange(VectorShuffle<Long> shuffle,
-                                  VectorMask<Long> m) {
+    public Long512Vector rearrange(VectorShuffle<Long> s,
+                                  VectorMask<Long> m,
+                                  boolean wrap) {
         return (Long512Vector)
             super.rearrangeTemplate(Long512Shuffle.class,
-                                    (Long512Shuffle) shuffle,
-                                    (Long512Mask) m);  // specialize
+                                    (Long512Shuffle) s,
+                                    (Long512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

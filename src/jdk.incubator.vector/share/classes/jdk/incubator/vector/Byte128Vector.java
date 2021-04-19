@@ -427,20 +427,23 @@ final class Byte128Vector extends ByteVector {
 
     @Override
     @ForceInline
-    public Byte128Vector rearrange(VectorShuffle<Byte> s) {
+    public Byte128Vector rearrange(VectorShuffle<Byte> s, boolean wrap) {
         return (Byte128Vector)
             super.rearrangeTemplate(Byte128Shuffle.class,
-                                    (Byte128Shuffle) s);  // specialize
+                                    (Byte128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Byte128Vector rearrange(VectorShuffle<Byte> shuffle,
-                                  VectorMask<Byte> m) {
+    public Byte128Vector rearrange(VectorShuffle<Byte> s,
+                                  VectorMask<Byte> m,
+                                  boolean wrap) {
         return (Byte128Vector)
             super.rearrangeTemplate(Byte128Shuffle.class,
-                                    (Byte128Shuffle) shuffle,
-                                    (Byte128Mask) m);  // specialize
+                                    (Byte128Shuffle) s,
+                                    (Byte128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

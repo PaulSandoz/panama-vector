@@ -427,20 +427,23 @@ final class Int64Vector extends IntVector {
 
     @Override
     @ForceInline
-    public Int64Vector rearrange(VectorShuffle<Integer> s) {
+    public Int64Vector rearrange(VectorShuffle<Integer> s, boolean wrap) {
         return (Int64Vector)
             super.rearrangeTemplate(Int64Shuffle.class,
-                                    (Int64Shuffle) s);  // specialize
+                                    (Int64Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Int64Vector rearrange(VectorShuffle<Integer> shuffle,
-                                  VectorMask<Integer> m) {
+    public Int64Vector rearrange(VectorShuffle<Integer> s,
+                                  VectorMask<Integer> m,
+                                  boolean wrap) {
         return (Int64Vector)
             super.rearrangeTemplate(Int64Shuffle.class,
-                                    (Int64Shuffle) shuffle,
-                                    (Int64Mask) m);  // specialize
+                                    (Int64Shuffle) s,
+                                    (Int64Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

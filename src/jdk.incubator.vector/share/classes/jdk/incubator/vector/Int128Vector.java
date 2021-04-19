@@ -427,20 +427,23 @@ final class Int128Vector extends IntVector {
 
     @Override
     @ForceInline
-    public Int128Vector rearrange(VectorShuffle<Integer> s) {
+    public Int128Vector rearrange(VectorShuffle<Integer> s, boolean wrap) {
         return (Int128Vector)
             super.rearrangeTemplate(Int128Shuffle.class,
-                                    (Int128Shuffle) s);  // specialize
+                                    (Int128Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Int128Vector rearrange(VectorShuffle<Integer> shuffle,
-                                  VectorMask<Integer> m) {
+    public Int128Vector rearrange(VectorShuffle<Integer> s,
+                                  VectorMask<Integer> m,
+                                  boolean wrap) {
         return (Int128Vector)
             super.rearrangeTemplate(Int128Shuffle.class,
-                                    (Int128Shuffle) shuffle,
-                                    (Int128Mask) m);  // specialize
+                                    (Int128Shuffle) s,
+                                    (Int128Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

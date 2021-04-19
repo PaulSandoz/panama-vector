@@ -421,20 +421,23 @@ final class Double256Vector extends DoubleVector {
 
     @Override
     @ForceInline
-    public Double256Vector rearrange(VectorShuffle<Double> s) {
+    public Double256Vector rearrange(VectorShuffle<Double> s, boolean wrap) {
         return (Double256Vector)
             super.rearrangeTemplate(Double256Shuffle.class,
-                                    (Double256Shuffle) s);  // specialize
+                                    (Double256Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Double256Vector rearrange(VectorShuffle<Double> shuffle,
-                                  VectorMask<Double> m) {
+    public Double256Vector rearrange(VectorShuffle<Double> s,
+                                  VectorMask<Double> m,
+                                  boolean wrap) {
         return (Double256Vector)
             super.rearrangeTemplate(Double256Shuffle.class,
-                                    (Double256Shuffle) shuffle,
-                                    (Double256Mask) m);  // specialize
+                                    (Double256Shuffle) s,
+                                    (Double256Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

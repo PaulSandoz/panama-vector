@@ -2004,22 +2004,45 @@ public abstract class FloatVector extends AbstractVector<Float> {
      * {@inheritDoc} <!--workaround-->
      */
     @Override
+    @ForceInline
+    public final
+    FloatVector rearrange(VectorShuffle<Float> s) {
+        return rearrange(s, false);
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
     public abstract
-    FloatVector rearrange(VectorShuffle<Float> m);
+    FloatVector rearrange(VectorShuffle<Float> s, boolean wrap);
 
     /*package-private*/
     @ForceInline
     final
     <S extends VectorShuffle<Float>>
-    FloatVector rearrangeTemplate(Class<S> shuffletype, S shuffle) {
-        shuffle.checkIndexes();
+    FloatVector rearrangeTemplate(Class<S> shuffletype, S shuffle, boolean wrap) {
+        if (!wrap) {
+            shuffle.checkIndexes();
+        }
         return VectorSupport.rearrangeOp(
             getClass(), shuffletype, float.class, length(),
             this, shuffle,
             (v1, s_) -> v1.uOp((i, a) -> {
                 int ei = s_.laneSource(i);
-                return v1.lane(ei);
+                return v1.lane(s_.wrapIndex(ei));
             }));
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
+    @ForceInline
+    public final
+    FloatVector rearrange(VectorShuffle<Float> s,
+                                   VectorMask<Float> m) {
+        return rearrange(s, m, false);
     }
 
     /**
@@ -2028,7 +2051,8 @@ public abstract class FloatVector extends AbstractVector<Float> {
     @Override
     public abstract
     FloatVector rearrange(VectorShuffle<Float> s,
-                                   VectorMask<Float> m);
+                                   VectorMask<Float> m,
+                                   boolean wrap);
 
     /*package-private*/
     @ForceInline
@@ -2036,19 +2060,22 @@ public abstract class FloatVector extends AbstractVector<Float> {
     <S extends VectorShuffle<Float>>
     FloatVector rearrangeTemplate(Class<S> shuffletype,
                                            S shuffle,
-                                           VectorMask<Float> m) {
+                                           VectorMask<Float> m,
+                                           boolean wrap) {
         FloatVector unmasked =
             VectorSupport.rearrangeOp(
                 getClass(), shuffletype, float.class, length(),
                 this, shuffle,
                 (v1, s_) -> v1.uOp((i, a) -> {
                     int ei = s_.laneSource(i);
-                    return ei < 0 ? 0 : v1.lane(ei);
+                    return v1.lane(s_.wrapIndex(ei));
                 }));
-        VectorMask<Float> valid = shuffle.laneIsValid();
-        if (m.andNot(valid).anyTrue()) {
-            shuffle.checkIndexes();
-            throw new AssertionError();
+        if (!wrap) {
+            VectorMask<Float> valid = shuffle.laneIsValid();
+            if (m.andNot(valid).anyTrue()) {
+                shuffle.checkIndexes();
+                throw new AssertionError();
+            }
         }
         return broadcast((float)0).blend(unmasked, m);
     }

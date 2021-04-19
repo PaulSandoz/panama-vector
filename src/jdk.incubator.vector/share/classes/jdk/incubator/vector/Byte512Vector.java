@@ -427,20 +427,23 @@ final class Byte512Vector extends ByteVector {
 
     @Override
     @ForceInline
-    public Byte512Vector rearrange(VectorShuffle<Byte> s) {
+    public Byte512Vector rearrange(VectorShuffle<Byte> s, boolean wrap) {
         return (Byte512Vector)
             super.rearrangeTemplate(Byte512Shuffle.class,
-                                    (Byte512Shuffle) s);  // specialize
+                                    (Byte512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Byte512Vector rearrange(VectorShuffle<Byte> shuffle,
-                                  VectorMask<Byte> m) {
+    public Byte512Vector rearrange(VectorShuffle<Byte> s,
+                                  VectorMask<Byte> m,
+                                  boolean wrap) {
         return (Byte512Vector)
             super.rearrangeTemplate(Byte512Shuffle.class,
-                                    (Byte512Shuffle) shuffle,
-                                    (Byte512Mask) m);  // specialize
+                                    (Byte512Shuffle) s,
+                                    (Byte512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

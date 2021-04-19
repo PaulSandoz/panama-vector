@@ -421,20 +421,23 @@ final class DoubleMaxVector extends DoubleVector {
 
     @Override
     @ForceInline
-    public DoubleMaxVector rearrange(VectorShuffle<Double> s) {
+    public DoubleMaxVector rearrange(VectorShuffle<Double> s, boolean wrap) {
         return (DoubleMaxVector)
             super.rearrangeTemplate(DoubleMaxShuffle.class,
-                                    (DoubleMaxShuffle) s);  // specialize
+                                    (DoubleMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public DoubleMaxVector rearrange(VectorShuffle<Double> shuffle,
-                                  VectorMask<Double> m) {
+    public DoubleMaxVector rearrange(VectorShuffle<Double> s,
+                                  VectorMask<Double> m,
+                                  boolean wrap) {
         return (DoubleMaxVector)
             super.rearrangeTemplate(DoubleMaxShuffle.class,
-                                    (DoubleMaxShuffle) shuffle,
-                                    (DoubleMaxMask) m);  // specialize
+                                    (DoubleMaxShuffle) s,
+                                    (DoubleMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override

@@ -421,20 +421,23 @@ final class Double512Vector extends DoubleVector {
 
     @Override
     @ForceInline
-    public Double512Vector rearrange(VectorShuffle<Double> s) {
+    public Double512Vector rearrange(VectorShuffle<Double> s, boolean wrap) {
         return (Double512Vector)
             super.rearrangeTemplate(Double512Shuffle.class,
-                                    (Double512Shuffle) s);  // specialize
+                                    (Double512Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Double512Vector rearrange(VectorShuffle<Double> shuffle,
-                                  VectorMask<Double> m) {
+    public Double512Vector rearrange(VectorShuffle<Double> s,
+                                  VectorMask<Double> m,
+                                  boolean wrap) {
         return (Double512Vector)
             super.rearrangeTemplate(Double512Shuffle.class,
-                                    (Double512Shuffle) shuffle,
-                                    (Double512Mask) m);  // specialize
+                                    (Double512Shuffle) s,
+                                    (Double512Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

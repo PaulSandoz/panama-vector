@@ -427,20 +427,23 @@ final class Byte256Vector extends ByteVector {
 
     @Override
     @ForceInline
-    public Byte256Vector rearrange(VectorShuffle<Byte> s) {
+    public Byte256Vector rearrange(VectorShuffle<Byte> s, boolean wrap) {
         return (Byte256Vector)
             super.rearrangeTemplate(Byte256Shuffle.class,
-                                    (Byte256Shuffle) s);  // specialize
+                                    (Byte256Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Byte256Vector rearrange(VectorShuffle<Byte> shuffle,
-                                  VectorMask<Byte> m) {
+    public Byte256Vector rearrange(VectorShuffle<Byte> s,
+                                  VectorMask<Byte> m,
+                                  boolean wrap) {
         return (Byte256Vector)
             super.rearrangeTemplate(Byte256Shuffle.class,
-                                    (Byte256Shuffle) shuffle,
-                                    (Byte256Mask) m);  // specialize
+                                    (Byte256Shuffle) s,
+                                    (Byte256Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

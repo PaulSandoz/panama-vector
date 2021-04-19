@@ -2346,22 +2346,45 @@ public abstract class $abstractvectortype$ extends AbstractVector<$Boxtype$> {
      * {@inheritDoc} <!--workaround-->
      */
     @Override
+    @ForceInline
+    public final
+    $abstractvectortype$ rearrange(VectorShuffle<$Boxtype$> s) {
+        return rearrange(s, false);
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
     public abstract
-    $abstractvectortype$ rearrange(VectorShuffle<$Boxtype$> m);
+    $abstractvectortype$ rearrange(VectorShuffle<$Boxtype$> s, boolean wrap);
 
     /*package-private*/
     @ForceInline
     final
     <S extends VectorShuffle<$Boxtype$>>
-    $abstractvectortype$ rearrangeTemplate(Class<S> shuffletype, S shuffle) {
-        shuffle.checkIndexes();
+    $abstractvectortype$ rearrangeTemplate(Class<S> shuffletype, S shuffle, boolean wrap) {
+        if (!wrap) {
+            shuffle.checkIndexes();
+        }
         return VectorSupport.rearrangeOp(
             getClass(), shuffletype, $type$.class, length(),
             this, shuffle,
             (v1, s_) -> v1.uOp((i, a) -> {
                 int ei = s_.laneSource(i);
-                return v1.lane(ei);
+                return v1.lane(s_.wrapIndex(ei));
             }));
+    }
+
+    /**
+     * {@inheritDoc} <!--workaround-->
+     */
+    @Override
+    @ForceInline
+    public final
+    $abstractvectortype$ rearrange(VectorShuffle<$Boxtype$> s,
+                                   VectorMask<$Boxtype$> m) {
+        return rearrange(s, m, false);
     }
 
     /**
@@ -2370,7 +2393,8 @@ public abstract class $abstractvectortype$ extends AbstractVector<$Boxtype$> {
     @Override
     public abstract
     $abstractvectortype$ rearrange(VectorShuffle<$Boxtype$> s,
-                                   VectorMask<$Boxtype$> m);
+                                   VectorMask<$Boxtype$> m,
+                                   boolean wrap);
 
     /*package-private*/
     @ForceInline
@@ -2378,19 +2402,22 @@ public abstract class $abstractvectortype$ extends AbstractVector<$Boxtype$> {
     <S extends VectorShuffle<$Boxtype$>>
     $abstractvectortype$ rearrangeTemplate(Class<S> shuffletype,
                                            S shuffle,
-                                           VectorMask<$Boxtype$> m) {
+                                           VectorMask<$Boxtype$> m,
+                                           boolean wrap) {
         $abstractvectortype$ unmasked =
             VectorSupport.rearrangeOp(
                 getClass(), shuffletype, $type$.class, length(),
                 this, shuffle,
                 (v1, s_) -> v1.uOp((i, a) -> {
                     int ei = s_.laneSource(i);
-                    return ei < 0 ? 0 : v1.lane(ei);
+                    return v1.lane(s_.wrapIndex(ei));
                 }));
-        VectorMask<$Boxtype$> valid = shuffle.laneIsValid();
-        if (m.andNot(valid).anyTrue()) {
-            shuffle.checkIndexes();
-            throw new AssertionError();
+        if (!wrap) {
+            VectorMask<$Boxtype$> valid = shuffle.laneIsValid();
+            if (m.andNot(valid).anyTrue()) {
+                shuffle.checkIndexes();
+                throw new AssertionError();
+            }
         }
         return broadcast(($type$)0).blend(unmasked, m);
     }

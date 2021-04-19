@@ -421,20 +421,23 @@ final class Float64Vector extends FloatVector {
 
     @Override
     @ForceInline
-    public Float64Vector rearrange(VectorShuffle<Float> s) {
+    public Float64Vector rearrange(VectorShuffle<Float> s, boolean wrap) {
         return (Float64Vector)
             super.rearrangeTemplate(Float64Shuffle.class,
-                                    (Float64Shuffle) s);  // specialize
+                                    (Float64Shuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public Float64Vector rearrange(VectorShuffle<Float> shuffle,
-                                  VectorMask<Float> m) {
+    public Float64Vector rearrange(VectorShuffle<Float> s,
+                                  VectorMask<Float> m,
+                                  boolean wrap) {
         return (Float64Vector)
             super.rearrangeTemplate(Float64Shuffle.class,
-                                    (Float64Shuffle) shuffle,
-                                    (Float64Mask) m);  // specialize
+                                    (Float64Shuffle) s,
+                                    (Float64Mask) m,
+                                    wrap);  // specialize
     }
 
     @Override

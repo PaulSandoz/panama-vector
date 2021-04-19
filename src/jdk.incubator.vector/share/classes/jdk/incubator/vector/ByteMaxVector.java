@@ -427,20 +427,23 @@ final class ByteMaxVector extends ByteVector {
 
     @Override
     @ForceInline
-    public ByteMaxVector rearrange(VectorShuffle<Byte> s) {
+    public ByteMaxVector rearrange(VectorShuffle<Byte> s, boolean wrap) {
         return (ByteMaxVector)
             super.rearrangeTemplate(ByteMaxShuffle.class,
-                                    (ByteMaxShuffle) s);  // specialize
+                                    (ByteMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public ByteMaxVector rearrange(VectorShuffle<Byte> shuffle,
-                                  VectorMask<Byte> m) {
+    public ByteMaxVector rearrange(VectorShuffle<Byte> s,
+                                  VectorMask<Byte> m,
+                                  boolean wrap) {
         return (ByteMaxVector)
             super.rearrangeTemplate(ByteMaxShuffle.class,
-                                    (ByteMaxShuffle) shuffle,
-                                    (ByteMaxMask) m);  // specialize
+                                    (ByteMaxShuffle) s,
+                                    (ByteMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override

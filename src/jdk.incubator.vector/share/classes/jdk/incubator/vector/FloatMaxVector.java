@@ -421,20 +421,23 @@ final class FloatMaxVector extends FloatVector {
 
     @Override
     @ForceInline
-    public FloatMaxVector rearrange(VectorShuffle<Float> s) {
+    public FloatMaxVector rearrange(VectorShuffle<Float> s, boolean wrap) {
         return (FloatMaxVector)
             super.rearrangeTemplate(FloatMaxShuffle.class,
-                                    (FloatMaxShuffle) s);  // specialize
+                                    (FloatMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public FloatMaxVector rearrange(VectorShuffle<Float> shuffle,
-                                  VectorMask<Float> m) {
+    public FloatMaxVector rearrange(VectorShuffle<Float> s,
+                                  VectorMask<Float> m,
+                                  boolean wrap) {
         return (FloatMaxVector)
             super.rearrangeTemplate(FloatMaxShuffle.class,
-                                    (FloatMaxShuffle) shuffle,
-                                    (FloatMaxMask) m);  // specialize
+                                    (FloatMaxShuffle) s,
+                                    (FloatMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override

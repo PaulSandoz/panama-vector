@@ -417,20 +417,23 @@ final class LongMaxVector extends LongVector {
 
     @Override
     @ForceInline
-    public LongMaxVector rearrange(VectorShuffle<Long> s) {
+    public LongMaxVector rearrange(VectorShuffle<Long> s, boolean wrap) {
         return (LongMaxVector)
             super.rearrangeTemplate(LongMaxShuffle.class,
-                                    (LongMaxShuffle) s);  // specialize
+                                    (LongMaxShuffle) s,
+                                    wrap);  // specialize
     }
 
     @Override
     @ForceInline
-    public LongMaxVector rearrange(VectorShuffle<Long> shuffle,
-                                  VectorMask<Long> m) {
+    public LongMaxVector rearrange(VectorShuffle<Long> s,
+                                  VectorMask<Long> m,
+                                  boolean wrap) {
         return (LongMaxVector)
             super.rearrangeTemplate(LongMaxShuffle.class,
-                                    (LongMaxShuffle) shuffle,
-                                    (LongMaxMask) m);  // specialize
+                                    (LongMaxShuffle) s,
+                                    (LongMaxMask) m,
+                                    wrap);  // specialize
     }
 
     @Override
