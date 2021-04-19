@@ -1297,6 +1297,10 @@ bool LibraryCallKit::inline_vector_rearrange() {
   Node* shuffle = unbox_vector(argument(5), shbox_type, shuffle_bt, num_elem);
 
   if (v1 == NULL || shuffle == NULL) {
+    if (C->print_intrinsics()) {
+      tty->print_cr("  ** %s unboxing failed: arity=2 op=shuffle/rearrange vlen=%d etype=%s ismask=no",
+                    v1 == NULL ? "vector" : "shuffle", num_elem, type2name(elem_bt));
+    }
     return false; // operand unboxing failed
   }
 
